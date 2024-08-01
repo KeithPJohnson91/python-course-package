@@ -1,1 +1,0 @@
-nested_function = lambda x: print(f"deeply nested {x}")
