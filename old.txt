@@ -1,0 +1,9 @@
+[distutils]
+index-servers =
+        pypi
+        codeartifact
+
+[codeartifact]
+repository = https://test-code-artifact-051328871306.d.codeartifact.us-east-1.amazonaws.com/pypi/test-code-artifact/
+username = aws
+password = eyJ2ZXIiOjEsImlzdSI6MTY5NjYwMzA3MSwiZW5jIjoiQTEyOEdDTSIsInRhZyI6IlFjUHVlWjVzd053OEJwby1DX0VwZEEiLCJleHAiOjE2OTY2NDYyNzEsImFsZyI6IkExMjhHQ$

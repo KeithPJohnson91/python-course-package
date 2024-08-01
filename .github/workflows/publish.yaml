@@ -1,0 +1,30 @@
+name: Build, Test, Publish
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+        - main
+  workflow_dispatch:
+
+env:
+    DEVELOPER_NAME: Keith
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          /bin/bash run.sh install
+          /bin/bash run.sh build
+          /bin/bash run.sh publish:test
+        env:
+            TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
