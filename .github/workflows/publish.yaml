@@ -24,7 +24,14 @@ jobs:
       - name: Install dependencies
         run: |
           /bin/bash run.sh install
+      - name: Build package
+        run: |
           /bin/bash run.sh build
-          /bin/bash run.sh publish:test
-        env:
-            TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+      - name: Check package linting
+        run: |
+          /bin/bash run.sh lint:ci
+    #   - name: Publish
+    #     run: |
+    #       /bin/bash run.sh publish:test
+    #     env:
+    #         TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}

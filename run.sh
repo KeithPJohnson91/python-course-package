@@ -13,19 +13,23 @@ function build {
     python -m build --sdist --wheel "$THIS_DIR/"
 }
 
-function load-dotenv {
+function try-load-dotenv {
     if [ -f .env ]; then
         export $(echo $(cat .env | sed 's/#.*//g'| xargs) | envsubst)
     fi
 }
 
 function publish:test {
-    load-dotenv
+    try-load-dotenv
     twine upload --repository testpypi dist/* --username=__token__ --password="$TEST_PYPI_TOKEN"
 }
 
 function lint {
     pre-commit run --all-files
+}
+
+function lint:ci {
+    SKIP=no-commit-to-branch pre-commit run --all-files
 }
 
 function start {
