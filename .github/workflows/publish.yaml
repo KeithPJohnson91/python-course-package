@@ -5,12 +5,11 @@ on:
     types: [opened, synchronize]
   push:
     branches:
-        - main
+      - main
   workflow_dispatch:
 
 env:
-    DEVELOPER_NAME: Keith
-
+  DEVELOPER_NAME: Keith
 
 jobs:
   build:
@@ -18,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-            fetch-depth: 0
+          fetch-depth: 0
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
         with:
@@ -38,25 +37,28 @@ jobs:
       - name: Upload package artifacts
         uses: actions/upload-artifact@v3
         with:
-            name: wheel-and-sdist
-            path: ./dist/*
-  
+          name: wheel-and-sdist
+          path: ./dist/*
   
   publish:
     runs-on: ubuntu-latest
     needs: build
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main'}}
     steps:
-    - uses: actions/setup-python@v3
-      with:
-        python-version: 3.8
-    - name: Download package artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: wheel-and-sdist
-        path: ./dist/
-    - name: Publish
-      run: |
-        /bin/bash run.sh publish:test
-      env:
-        TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+      - name: Download package artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: wheel-and-sdist
+          path: ./dist/
+      - name: Publish
+        run: |
+          /bin/bash run.sh publish:test
+        env:
+          TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
