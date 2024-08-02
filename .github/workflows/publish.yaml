@@ -17,10 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
         with:
           python-version: 3.8
+      - name: Tag with release version
+        run: |
+          git tag $(cat version.txt)
       - name: Install dependencies
         run: |
           /bin/bash run.sh install
@@ -30,8 +35,28 @@ jobs:
       - name: Check package linting
         run: |
           /bin/bash run.sh lint:ci
-    #   - name: Publish
-    #     run: |
-    #       /bin/bash run.sh publish:test
-    #     env:
-    #         TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v3
+        with:
+            name: wheel-and-sdist
+            path: ./dist/*
+  
+  
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/head/main'}}
+    steps:
+    - uses: actions/setup-python@v3
+      with:
+        python-version: 3.8
+    - name: Download package artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: wheel-and-sdist
+        path: ./dist/
+    - name: Publish
+      run: |
+        /bin/bash run.sh publish:test
+      env:
+        TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
