@@ -59,6 +59,7 @@ jobs:
           path: ./dist/
       - name: Publish
         run: |
+          pip install twine
           /bin/bash run.sh publish:test
         env:
           TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
